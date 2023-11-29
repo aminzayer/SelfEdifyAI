@@ -24,5 +24,3 @@ Developing a self-learning AI system using neural networks to autonomously expan
 - **Implementation of Learning Algorithms:** Choosing and implementing neural networks using TensorFlow or PyTorch.
 - **Development of Data Search and Analysis Module:** For investigating and choosing appropriate learning sources.
 - **User Interface Design:** Employing HTML/CSS/JavaScript or frameworks like React or Vue.js for an aesthetically pleasing and functional user interface.
-
-Feel free to customize this template according to your specific project details and structure it as necessary for your GitHub repository.
