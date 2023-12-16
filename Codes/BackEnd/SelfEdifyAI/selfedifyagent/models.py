@@ -2,11 +2,6 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 
-"""_summary_
-
-Returns:
-    _type_: _description_
-"""
 class Information(models.Model):
     url = models.URLField(unique=True)
     title = models.CharField(max_length=255)
