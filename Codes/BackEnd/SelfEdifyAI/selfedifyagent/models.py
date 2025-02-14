@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
@@ -56,8 +55,8 @@ class Information(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     # Additional metadata
-    metadata = JSONField(default=dict, blank=True)
-    tags = JSONField(default=list, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+    tags = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return self.title
@@ -90,7 +89,7 @@ class ShortTermMemory(models.Model):
     last_reviewed = models.DateTimeField(auto_now=True)
     
     # Additional context
-    related_concepts = JSONField(default=list, blank=True)
+    related_concepts = models.JSONField(default=list, blank=True)
     learning_notes = models.TextField(blank=True)
 
     def __str__(self):
@@ -107,8 +106,8 @@ class LongTermMemory(models.Model):
     )
     
     # Knowledge representation
-    associations = JSONField(default=dict)
-    knowledge_graph = JSONField(default=dict)
+    associations = models.JSONField(default=dict)
+    knowledge_graph = models.JSONField(default=dict)
     
     # Learning metrics
     confidence_score = models.FloatField(
