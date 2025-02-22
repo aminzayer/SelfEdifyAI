@@ -48,13 +48,13 @@ class InformationViewSet(viewsets.ModelViewSet):
     def search(self, request):
         query = request.query_params.get('q', '')
         category = request.query_params.get('category', None)
-        
+
         queryset = self.queryset
         if query:
             queryset = queryset.filter(title__icontains=query) | queryset.filter(content__icontains=query)
         if category:
             queryset = queryset.filter(categories__id=category)
-            
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -104,6 +104,10 @@ class LongTermMemoryViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(memories, many=True)
         return Response(serializer.data)
 
+
+def dashboard(request):
+    return render(request, 'selfedify_ui.html')
+
 @api_view(['POST'])
 @csrf_exempt
 def learn_information(request):
@@ -115,7 +119,7 @@ def learn_information(request):
         info_serializer = InformationSerializer(data=request.data)
         if info_serializer.is_valid():
             information = info_serializer.save()
-            
+
             # Create ShortTermMemory
             stm_data = {
                 'information': information.id,
@@ -126,7 +130,7 @@ def learn_information(request):
             stm_serializer = ShortTermMemorySerializer(data=stm_data)
             if stm_serializer.is_valid():
                 stm_serializer.save()
-            
+
             # Create LongTermMemory if confidence is high enough
             if request.data.get('confidence_score', 0) >= 0.7:
                 ltm_data = {
@@ -137,14 +141,14 @@ def learn_information(request):
                 ltm_serializer = LongTermMemorySerializer(data=ltm_data)
                 if ltm_serializer.is_valid():
                     ltm_serializer.save()
-            
+
             return Response({
                 'status': 'success',
                 'message': 'Information processed and stored in memory'
             }, status=status.HTTP_201_CREATED)
-        
+
         return Response(info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     except Exception as e:
         return Response({
             'status': 'error',
@@ -159,7 +163,7 @@ def consolidate_memory(request, stm_id):
     """
     try:
         stm = get_object_or_404(ShortTermMemory, pk=stm_id)
-        
+
         # Create LongTermMemory
         ltm_data = {
             'information': stm.information.id,
@@ -167,19 +171,19 @@ def consolidate_memory(request, stm_id):
             'confidence_score': request.data.get('confidence_score', 0.7),
             'associations': request.data.get('associations', {})
         }
-        
+
         ltm_serializer = LongTermMemorySerializer(data=ltm_data)
         if ltm_serializer.is_valid():
             ltm_serializer.save()
             stm.delete()  # Remove from short-term memory
-            
+
             return Response({
                 'status': 'success',
                 'message': 'Memory consolidated to long-term storage'
             })
-            
+
         return Response(ltm_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
     except Exception as e:
         return Response({
             'status': 'error',

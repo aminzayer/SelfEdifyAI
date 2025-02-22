@@ -12,4 +12,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('learn/', views.learn_information, name='learn-information'),
     path('consolidate/<int:stm_id>/', views.consolidate_memory, name='consolidate-memory'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

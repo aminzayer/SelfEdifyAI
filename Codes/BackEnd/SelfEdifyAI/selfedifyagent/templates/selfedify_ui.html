@@ -1,0 +1,440 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelfEdifyAI Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">SelfEdifyAI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="nav-categories">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="nav-information">Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="nav-memory">Memory</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mt-5">
+        <!-- Categories Section -->
+        <div id="categories-section">
+            <h2>Categories</h2>
+            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-table-body">
+                    <!-- Categories will be populated here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Information Section -->
+        <div id="information-section" class="d-none">
+            <h2>Information</h2>
+            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInformationModal">Add Information</button>
+            <input type="text" id="search-query" class="form-control mb-3" placeholder="Search...">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="information-table-body">
+                    <!-- Information will be populated here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Memory Section -->
+        <div id="memory-section" class="d-none">
+            <h2>Memory</h2>
+            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMemoryModal">Add Memory</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Details</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="memory-table-body">
+                    <!-- Memory entries will be populated here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addCategoryModalLabel">Add New Category</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="add-category-form">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="category-name">Name</label>
+                      <input type="text" class="form-control" id="category-name" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="category-parent">Parent Category</label>
+                      <select class="form-control" id="category-parent">
+                          <option value="">None</option>
+                          <!-- Parent categories will be populated here -->
+                      </select>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Category</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Information Modal -->
+    <div class="modal fade" id="addInformationModal" tabindex="-1" aria-labelledby="addInformationModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addInformationModalLabel">Add New Information</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="add-information-form">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="information-title">Title</label>
+                      <input type="text" class="form-control" id="information-title" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="information-content">Content</label>
+                      <textarea class="form-control" id="information-content" rows="3" required></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="information-category">Category</label>
+                      <select class="form-control" id="information-category" required>
+                          <!-- Categories will be populated here -->
+                      </select>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Information</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Memory Modal -->
+    <div class="modal fade" id="addMemoryModal" tabindex="-1" aria-labelledby="addMemoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addMemoryModalLabel">Add New Memory</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="add-memory-form">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="memory-type">Type</label>
+                      <select class="form-control" id="memory-type" required>
+                          <option value="short">Short Term</option>
+                          <option value="long">Long Term</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="memory-details">Details</label>
+                      <textarea class="form-control" id="memory-details" rows="3" required></textarea>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Memory</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function() {
+            // Navigation
+            $('#nav-categories').click(function() {
+                $('.section').addClass('d-none');
+                $('#categories-section').removeClass('d-none');
+                fetchCategories();
+            });
+
+            $('#nav-information').click(function() {
+                $('.section').addClass('d-none');
+                $('#information-section').removeClass('d-none');
+                fetchInformation();
+                fetchCategoriesForInformation();
+            });
+
+            $('#nav-memory').click(function() {
+                $('.section').addClass('d-none');
+                $('#memory-section').removeClass('d-none');
+                fetchMemory();
+            });
+
+            // Fetch Categories
+            function fetchCategories() {
+                $.ajax({
+                    url: '/api/categories/',
+                    method: 'GET',
+                    success: function(data) {
+                        let tbody = '';
+                        data.forEach(category => {
+                            tbody += `
+                                <tr>
+                                    <td>${category.id}</td>
+                                    <td>${category.name}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        $('#categories-table-body').html(tbody);
+                    }
+                });
+            }
+
+            // Fetch Information
+            function fetchInformation(query='') {
+                $.ajax({
+                    url: '/api/information/search/',
+                    method: 'GET',
+                    data: { q: query },
+                    success: function(data) {
+                        let tbody = '';
+                        data.forEach(info => {
+                            tbody += `
+                                <tr>
+                                    <td>${info.id}</td>
+                                    <td>${info.title}</td>
+                                    <td>${info.content}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info">Verify</button>
+                                        <button class="btn btn-sm btn-warning">Access</button>
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        $('#information-table-body').html(tbody);
+                    }
+                });
+            }
+
+            // Fetch Categories for Information Section
+            function fetchCategoriesForInformation() {
+                $.ajax({
+                    url: '/api/categories/',
+                    method: 'GET',
+                    success: function(data) {
+                        let options = '';
+                        data.forEach(category => {
+                            options += `<option value="${category.id}">${category.name}</option>`;
+                        });
+                        $('#information-category').html(options);
+                    }
+                });
+            }
+
+            // Fetch Memory
+            function fetchMemory() {
+                $.ajax({
+                    url: '/api/longtermmemory/',
+                    method: 'GET',
+                    success: function(data) {
+                        let tbody = '';
+                        data.forEach(memory => {
+                            tbody += `
+                                <tr>
+                                    <td>${memory.id}</td>
+                                    <td>Long Term</td>
+                                    <td>${memory.confidence_score}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success">Reinforce</button>
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        // Similarly, fetch short-term memories and append
+                        $.ajax({
+                            url: '/api/shorttermmemory/',
+                            method: 'GET',
+                            success: function(shortData) {
+                                shortData.forEach(memory => {
+                                    tbody += `
+                                        <tr>
+                                            <td>${memory.id}</td>
+                                            <td>Short Term</td>
+                                            <td>${memory.comprehension_level}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success">Update Comprehension</button>
+                                                <button class="btn btn-sm btn-danger">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                });
+                                $('#memory-table-body').html(tbody);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Add Category
+            $('#add-category-form').submit(function(e) {
+                e.preventDefault();
+                const name = $('#category-name').val();
+                const parent = $('#category-parent').val();
+
+                $.ajax({
+                    url: '/api/categories/',
+                    method: 'POST',
+                    data: {
+                        name: name,
+                        parent: parent
+                    },
+                    headers: {
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                    },
+                    success: function(data) {
+                        $('#addCategoryModal').modal('hide');
+                        fetchCategories();
+                    },
+                    error: function(err) {
+                        alert('Error adding category');
+                    }
+                });
+            });
+
+            // Add Information
+            $('#add-information-form').submit(function(e) {
+                e.preventDefault();
+                const title = $('#information-title').val();
+                const content = $('#information-content').val();
+                const category = $('#information-category').val();
+
+                $.ajax({
+                    url: '/api/information/',
+                    method: 'POST',
+                    data: {
+                        title: title,
+                        content: content,
+                        categories: [category]
+                    },
+                    headers: {
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                    },
+                    success: function(data) {
+                        $('#addInformationModal').modal('hide');
+                        fetchInformation();
+                    },
+                    error: function(err) {
+                        alert('Error adding information');
+                    }
+                });
+            });
+
+            // Add Memory
+            $('#add-memory-form').submit(function(e) {
+                e.preventDefault();
+                const type = $('#memory-type').val();
+                const details = $('#memory-details').val();
+
+                if(type === 'short') {
+                    $.ajax({
+                        url: '/api/shorttermmemory/',
+                        method: 'POST',
+                        data: {
+                            context: details,
+                            priority_level: 5
+                        },
+                        headers: {
+                            'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                        },
+                        success: function(data) {
+                            $('#addMemoryModal').modal('hide');
+                            fetchMemory();
+                        },
+                        error: function(err) {
+                            alert('Error adding short-term memory');
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/longtermmemory/',
+                        method: 'POST',
+                        data: {
+                            importance: 5,
+                            confidence_score: 0.7
+                        },
+                        headers: {
+                            'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                        },
+                        success: function(data) {
+                            $('#addMemoryModal').modal('hide');
+                            fetchMemory();
+                        },
+                        error: function(err) {
+                            alert('Error adding long-term memory');
+                        }
+                    });
+                }
+            });
+
+            // Initial Fetch
+            fetchCategories();
+        });
+    </script>
+</body>
+</html>
