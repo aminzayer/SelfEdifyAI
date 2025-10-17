@@ -13,6 +13,7 @@ from .serializers import (
     ShortTermMemorySerializer,
     LongTermMemorySerializer
 )
+from .services import MemoryService
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -114,46 +115,9 @@ def learn_information(request):
     """
     Endpoint to process new information and create appropriate memory entries
     """
-    try:
-        # Create Information entry
-        info_serializer = InformationSerializer(data=request.data)
-        if info_serializer.is_valid():
-            information = info_serializer.save()
-
-            # Create ShortTermMemory
-            stm_data = {
-                'information': information.id,
-                'relevance_score': request.data.get('relevance_score', 0.5),
-                'context': request.data.get('context', ''),
-                'priority_level': request.data.get('priority_level', 5)
-            }
-            stm_serializer = ShortTermMemorySerializer(data=stm_data)
-            if stm_serializer.is_valid():
-                stm_serializer.save()
-
-            # Create LongTermMemory if confidence is high enough
-            if request.data.get('confidence_score', 0) >= 0.7:
-                ltm_data = {
-                    'information': information.id,
-                    'importance': request.data.get('importance', 5),
-                    'confidence_score': request.data.get('confidence_score', 0.7)
-                }
-                ltm_serializer = LongTermMemorySerializer(data=ltm_data)
-                if ltm_serializer.is_valid():
-                    ltm_serializer.save()
-
-            return Response({
-                'status': 'success',
-                'message': 'Information processed and stored in memory'
-            }, status=status.HTTP_201_CREATED)
-
-        return Response(info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    except Exception as e:
-        return Response({
-            'status': 'error',
-            'message': str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    memory_service = MemoryService()
+    result, status_code = memory_service.learn_information(request.data)
+    return Response(result, status=status_code)
 
 @api_view(['POST'])
 @csrf_exempt
@@ -161,31 +125,6 @@ def consolidate_memory(request, stm_id):
     """
     Endpoint to convert short-term memory to long-term memory
     """
-    try:
-        stm = get_object_or_404(ShortTermMemory, pk=stm_id)
-
-        # Create LongTermMemory
-        ltm_data = {
-            'information': stm.information.id,
-            'importance': request.data.get('importance', 5),
-            'confidence_score': request.data.get('confidence_score', 0.7),
-            'associations': request.data.get('associations', {})
-        }
-
-        ltm_serializer = LongTermMemorySerializer(data=ltm_data)
-        if ltm_serializer.is_valid():
-            ltm_serializer.save()
-            stm.delete()  # Remove from short-term memory
-
-            return Response({
-                'status': 'success',
-                'message': 'Memory consolidated to long-term storage'
-            })
-
-        return Response(ltm_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    except Exception as e:
-        return Response({
-            'status': 'error',
-            'message': str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    memory_service = MemoryService()
+    result, status_code = memory_service.consolidate_memory(stm_id, request.data)
+    return Response(result, status=status_code)
